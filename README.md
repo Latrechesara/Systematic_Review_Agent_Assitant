@@ -177,21 +177,15 @@ systematic_review_assistant/
 ### Option A: Running with Docker Compose (Recommended)
 
 1. **Clone the repository:**
-   \`\`\`bash
    git clone https://github.com/Latrechesara/Systematic_Review_Agent_Assitant
    cd systematic-review-assistant
-   \`\`\`
 
 2. **Configure Environment Variables:**
    Create a \`.env\` file in the project root:
-   \`\`\`env
    OPENAI_API_KEY=your_openai_api_key_here
-   \`\`\`
 
 3. **Start the Application:**
-   \`\`\`bash
    docker-compose up --build
-   \`\`\`
 
 4. **Access the Application:**
    Open your browser and navigate to \`http://localhost:8501\`.
@@ -201,19 +195,13 @@ systematic_review_assistant/
 ### Option B: Running Locally with \`uv\`
 
 1. **Install Dependencies:**
-   \`\`\`bash
    uv sync
-   \`\`\`
 
 2. **Generate Ground Truth Dataset:**
-   \`\`\`bash
    uv run python -m evaluation.generate_ground_truth
-   \`\`\`
 
 3. **Launch Streamlit App:**
-   \`\`\`bash
    uv run streamlit run app/main.py
-   \`\`\`
 
 ---
 
@@ -222,14 +210,10 @@ systematic_review_assistant/
 To reproduce evaluation metrics and run the automated LLM Judge benchmark:
 
 1. **Generate Answers across Ground Truth Queries:**
-   \`\`\`bash
    uv run python -m evaluation.evaluate_rag
-   \`\`\`
 
 2. **Run LLM Judge Benchmark:**
-   \`\`\`bash
    uv run python -m evaluation.judge
-   \`\`\`
 
 The judge results and verdict score distributions will be saved directly to \`data/eval_judge_results.csv\`.
 
