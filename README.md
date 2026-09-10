@@ -6,12 +6,42 @@
 
 
 
+
+
 https://github.com/user-attachments/assets/e7f7f566-b4aa-4268-b4e4-85a5f42e8d21
 
 
 > An end-to-end Retrieval-Augmented Generation (RAG) system and interactive dashboard designed to automate literature search, evidence extraction, and synthesis for systematic reviews on **Multimodal AI in Lung Cancer**.
 
 ---
+
+
+```mermaid
+flowchart TD
+    subgraph UI ["User Interface Layer (app)"]
+        Streamlit["Streamlit Dashboard Application"]
+    end
+
+    subgraph Core ["Core Application Logic (src)"]
+        Embedder["src/embedder.py (all-MiniLM-L6-v2)"]
+        Ingestion["src/ingestion: chunk.py / index.py"]
+        Retrieval["src/retrieval: search.py / tools.py"]
+        RAG["src/rag: Basic RAG & Agentic RAG"]
+    end
+
+    subgraph Infrastructure ["Database & External Model Infrastructure"]
+        Postgres[("PostgreSQL Database + pgvector Extension")]
+        OpenAI["OpenAI API (gpt-4o-mini)"]
+    end
+
+    Streamlit -->|1. Query Request| RAG
+    Ingestion -->|2. Generate Embeddings| Embedder
+    Ingestion -->|2. Store Chunks and Vectors| Postgres
+    RAG -->|3. Search Request| Retrieval
+    Retrieval -->|4. Encode Query| Embedder
+    Retrieval -->|5. Hybrid RRF Query| Postgres
+    RAG -->|6. Synthesis / Tool Loop| OpenAI
+    RAG -->|7. Render Response| Streamlit
 
 ## 📌 Peer Review Evaluation Quick Reference
 
