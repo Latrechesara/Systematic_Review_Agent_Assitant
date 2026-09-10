@@ -52,33 +52,7 @@ While metadata (Title, DOI, Year) is fetched via API, the unstructured **Abstrac
 ```
 ---
 
-```mermaid
-flowchart TD
-    subgraph UI ["User Interface Layer (app/)"]
-        Streamlit["Streamlit Dashboard Application\n(app/ directory)"]
-    end
 
-    subgraph Core ["Core Application Logic (src/)"]
-        Embedder["src/embedder.py\n(all-MiniLM-L6-v2)"]
-        Ingestion["src/ingestion/\nchunk.py / index.py"]
-        Retrieval["src/retrieval/\n• search.py (PGSearcher)\n• tools.py (RETRIEVAL_TOOL)\n(Dense Vector + FTS Search, RRF)"]
-        RAG["src/rag/\n• Basic RAG (Structured Output)\n• Agentic RAG (Tool Calls)"]
-    end
-
-    subgraph Infrastructure ["Database & External Model Infrastructure"]
-        Postgres[("PostgreSQL Database\n+ pgvector Extension\n(document_chunks)")]
-        OpenAI["OpenAI API\n(gpt-4o-mini)"]
-    end
-
-    Streamlit -->|1. Query Request| RAG
-    Ingestion -->|2. Generate Embeddings| Embedder
-    Ingestion -->|2. Store Chunks & Vectors| Postgres
-    RAG -->|3. Search Request| Retrieval
-    Retrieval -->|4. Encode Query| Embedder
-    Retrieval -->|5. Hybrid RRF Query| Postgres
-    RAG -->|6. Synthesis / Tool Loop| OpenAI
-    RAG -->|7. Render Response| Streamlit
-```
 ## 🏗️ 3. System Architecture & Flow
 
 ```mermaid
@@ -159,6 +133,7 @@ Evaluates multi-turn Agentic RAG behaviors across three execution axes:
 
 ## 🛠️ 5. Project Structure
 
+```text
 systematic_review_assistant/
 ├── app/
 │   ├── main.py                 # Streamlit User Interface
@@ -179,7 +154,7 @@ systematic_review_assistant/
 ├── docker-compose.yml          # Orchestrator setup
 ├── pyproject.toml              # Project dependencies (managed via uv)
 └── README.md                   # Project documentation
----
+```
 
 ## 🚀 6. How to Run the Project
 
@@ -249,32 +224,4 @@ The judge results and verdict score distributions will be saved directly to \`da
 * **Containerization:** Docker & Docker Compose
 * **Evaluation Framework:** Pydantic, Tenacity, ThreadPoolExecutor
 
-
-```mermaid
-flowchart TD
-    subgraph UI ["User Interface Layer (app/)"]
-        Streamlit["Streamlit Dashboard Application\n(app/ directory)"]
-    end
-
-    subgraph Core ["Core Application Logic (src/)"]
-        Embedder["src/embedder.py\n(all-MiniLM-L6-v2)"]
-        Ingestion["src/ingestion/\nchunk.py / index.py"]
-        Retrieval["src/retrieval/\n• search.py (PGSearcher)\n• tools.py (RETRIEVAL_TOOL)\n(Dense Vector + FTS Search, RRF)"]
-        RAG["src/rag/\n• Basic RAG (Structured Output)\n• Agentic RAG (Tool Calls)"]
-    end
-
-    subgraph Infrastructure ["Database & External Model Infrastructure"]
-        Postgres[("PostgreSQL Database\n+ pgvector Extension\n(document_chunks)")]
-        OpenAI["OpenAI API\n(gpt-4o-mini)"]
-    end
-
-    Streamlit -->|1. Query Request| RAG
-    Ingestion -->|2. Generate Embeddings| Embedder
-    Ingestion -->|2. Store Chunks & Vectors| Postgres
-    RAG -->|3. Search Request| Retrieval
-    Retrieval -->|4. Encode Query| Embedder
-    Retrieval -->|5. Hybrid RRF Query| Postgres
-    RAG -->|6. Synthesis / Tool Loop| OpenAI
-    RAG -->|7. Render Response| Streamlit
-```
 
