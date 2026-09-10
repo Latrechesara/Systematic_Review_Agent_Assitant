@@ -81,32 +81,7 @@ flowchart TD
 ```
 ## 🏗️ 3. System Architecture & Flow
 
-flowchart TD
-    subgraph UI ["User Interface Layer"]
-        Streamlit["Streamlit Dashboard Application"]
-    end
 
-    subgraph Core ["Core Application Logic"]
-        Embedder["src/embedder.py (all-MiniLM-L6-v2)"]
-        Ingestion["src/ingestion: chunk.py / index.py"]
-        Retrieval["src/retrieval: search.py / tools.py"]
-        RAG["src/rag: Basic RAG and Agentic RAG"]
-    end
-
-    subgraph Infrastructure ["Database and External Model Infrastructure"]
-        Postgres[("PostgreSQL Database + pgvector Extension")]
-        OpenAI["OpenAI API (gpt-4o-mini)"]
-    end
-
-    Streamlit -->|1. Query Request| RAG
-    Ingestion -->|2. Generate Embeddings| Embedder
-    Ingestion -->|2. Store Chunks and Vectors| Postgres
-    RAG -->|3. Search Request| Retrieval
-    Retrieval -->|4. Encode Query| Embedder
-    Retrieval -->|5. Hybrid RRF Query| Postgres
-    RAG -->|6. Synthesis / Tool Loop| OpenAI
-    RAG -->|7. Render Response| Streamlit
----
 
 ## 📈 4. Evaluation & Experiments
 
@@ -247,7 +222,33 @@ The judge results and verdict score distributions will be saved directly to \`da
 * **Dependency & Package Management:** \`uv\`
 * **Containerization:** Docker & Docker Compose
 * **Evaluation Framework:** Pydantic, Tenacity, ThreadPoolExecutor
-'''
 
-ADME.md!')
-"
+
+```mermaid
+flowchart TD
+    subgraph UI ["User Interface Layer (app/)"]
+        Streamlit["Streamlit Dashboard Application\n(app/ directory)"]
+    end
+
+    subgraph Core ["Core Application Logic (src/)"]
+        Embedder["src/embedder.py\n(all-MiniLM-L6-v2)"]
+        Ingestion["src/ingestion/\nchunk.py / index.py"]
+        Retrieval["src/retrieval/\n• search.py (PGSearcher)\n• tools.py (RETRIEVAL_TOOL)\n(Dense Vector + FTS Search, RRF)"]
+        RAG["src/rag/\n• Basic RAG (Structured Output)\n• Agentic RAG (Tool Calls)"]
+    end
+
+    subgraph Infrastructure ["Database & External Model Infrastructure"]
+        Postgres[("PostgreSQL Database\n+ pgvector Extension\n(document_chunks)")]
+        OpenAI["OpenAI API\n(gpt-4o-mini)"]
+    end
+
+    Streamlit -->|1. Query Request| RAG
+    Ingestion -->|2. Generate Embeddings| Embedder
+    Ingestion -->|2. Store Chunks & Vectors| Postgres
+    RAG -->|3. Search Request| Retrieval
+    Retrieval -->|4. Encode Query| Embedder
+    Retrieval -->|5. Hybrid RRF Query| Postgres
+    RAG -->|6. Synthesis / Tool Loop| OpenAI
+    RAG -->|7. Render Response| Streamlit
+```
+
