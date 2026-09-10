@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "systematic-review-assistant"
+version = "0.1.0"
+description = "Systematic review literature assistant with hybrid retrieval and RRF reranking."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "datasets>=5.0.1",
+    "deepeval>=4.2.2",
+    "jupyter>=1.1.1",
+    "langchain-community>=0.3.0,<0.4.0",
+    "langchain-core>=1.6.2",
+    "langchain-openai>=1.6.0",
+    "minsearch>=0.2.0",
+    "onnxruntime>=1.28.0",
+    "openai>=2.52.0",
+    "pgvector>=0.5.0",
+    "psycopg[binary]>=3.3.5",
+    "pydantic-ai>=2.31.1",
+    "python-dotenv>=1.2.2",
+    "ragas<0.4.0",
+    "requests>=2.34.2",
+    "streamlit>=1.63.0",
+    "tokenizers>=0.23.1",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
