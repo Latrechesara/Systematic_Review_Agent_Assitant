@@ -38,9 +38,8 @@ Manual extraction is time-consuming and prone to human error. **Systematic Revie
 
 ---
 
-## 📊 2. Dataset
 
-## 📊 Dataset Pipeline (`scrape.py`)
+## 📊 2. Dataset Pipeline (`scrape.py`)
 
 ### How to Generate the Data
 Run the harvester script located in the `data/` directory to fetch, filter, and score the latest peer-reviewed literature:
@@ -104,19 +103,49 @@ flowchart TD
 
 ## 📈 4. Evaluation & Experiments
 
-### A. Retrieval Evaluation
-We evaluated three retrieval strategies across our ground truth dataset using **Mean Reciprocal Rank (MRR)** and **Hit Rate @ K**:
+## 🧪 Comprehensive Evaluation Framework
 
-| Retrieval Approach | Hit Rate @ 5 | MRR @ 5 | Notes |
-| :--- | :---: | :---: | :--- |
-| **Vector Search Only** | 0.82 | 0.68 | Misses domain-specific acronyms (e.g., \"MCNN\", \"WSI\"). |
-| **BM25 Search Only** | 0.76 | 0.61 | Weak on conceptual semantic matching. |
-| **Hybrid + Reranking (Chosen)** | **0.94** | **0.86** | **Best overall accuracy and citation grounding.** |
+To measure end-to-end performance, the system is evaluated across both **Retrieval Accuracy** (algebraic similarity & rank position) and **Generation Quality** (LLM-as-a-Judge with structured output validation).
 
-### B. LLM Output Evaluation (LLM Judge)
-We implemented an automated LLM-as-a-Judge pipeline (\`evaluation/judge.py\`) using \`gpt-4o-mini\` with Pydantic structured outputs (\`BasicRAGAnswerEvaluation\`):
-* **Judged Dimensions:** Relevance, Groundedness, and Hallucination risk.
-* **Verdict Categories:** \`RELEVANT\`, \`PARTLY_RELEVANT\`, \`NON_RELEVANT\`.
+---
+
+### 📉 1. Retrieval Performance Metrics
+
+We evaluated retrieval strategies across two granularities (**Full Document** vs. **Chunked**) using **MRR (Mean Reciprocal Rank)** and **Hit Rate**:
+
+| Experiment | MRR | Hit Rate |
+| :--- | :---: | :---: |
+| Full Doc - Keyword | 0.4143 | 0.5736 |
+| Full Doc - Vector | 0.3843 | 0.5024 |
+| **Full Doc - Hybrid (RRF k=50)** | **0.4608** | **0.6068** |
+| Chunked - Keyword | 0.3925 | 0.4814 |
+| Chunked - Vector | 0.4287 | 0.5291 |
+| **Chunked - Hybrid (RRF k=50)** | **0.4847** | **0.6019** |
+
+#### Key Takeaways
+* **Hybrid Search (RRF) Wins:** Combining BM25 keyword search with dense vector embeddings via Reciprocal Rank Fusion ($k=50$) consistently outperforms single-retrieval methods across both metrics.
+* **Chunking Boosts Precision:** The **Chunked Hybrid** model achieved the highest overall ranking accuracy (**MRR = 0.4847**), proving that granular passage retrieval places the most relevant context higher in the candidate list.
+* **Full Doc Preserves Recall:** **Full Doc Hybrid** yields the highest coverage (**Hit Rate = 0.6068**), making document-level indexing slightly better for broad context capture.
+
+---
+
+### ⚖️ 2. Generation Quality: LLM-as-a-Judge Framework
+
+To assess response accuracy beyond retrieval metrics, we implement an automated **LLM-as-a-Judge** pipeline using structured outputs (`gpt-4o-mini`) via OpenAI's Pydantic schema validation.
+
+#### Evaluation Schemas
+
+##### Basic RAG Evaluation (`BasicRAGAnswerEvaluation`)
+Evaluates generated model answers directly against retrieved context and ground truth reference answers:
+* **`RELEVANT`**: Answer is completely accurate and addresses the query fully.
+* **`PARTLY_RELEVANT`**: Answer provides partial context or missing minor details.
+* **`NON_RELEVANT`**: Answer contains inaccurate information, hallucinations, or fails to address the question.
+
+##### Agentic Trajectory Evaluation (`AgentTrajectoryEvaluation`)
+Evaluates multi-turn Agentic RAG behaviors across three execution axes:
+* **Tool Selection (`YES` / `NO`)**: Validates clean tool calls and argument formatting.
+* **Trajectory Efficiency (`EFFICIENT` / `INEFFICIENT`)**: Flags redundant retrieval steps or infinite reasoning loops.
+* **Goal Completion (`SUCCESS` / `PARTIAL` / `FAIL`)**: Tracks end-to-end request resolution.
 
 ---
 
