@@ -69,22 +69,21 @@ While metadata (Title, DOI, Year) is fetched via API, the unstructured **Abstrac
 
 ## 🏗️ 3. System Architecture & Flow
 
-```mermaid
 flowchart TD
-    subgraph UI["User Interface Layer"]
+    subgraph UI ["User Interface Layer"]
         Streamlit["Streamlit Dashboard Application"]
     end
 
-    subgraph Core["Core Application Logic"]
-        Embedder["src/embedder.py<br/>all-MiniLM-L6-v2"]
-        Ingestion["src/ingestion<br/>chunk.py / index.py"]
-        Retrieval["src/retrieval<br/>search.py / tools.py"]
-        RAG["src/rag<br/>Basic RAG and Agentic RAG"]
+    subgraph Core ["Core Application Logic"]
+        Embedder["src/embedder.py (all-MiniLM-L6-v2)"]
+        Ingestion["src/ingestion: chunk.py / index.py"]
+        Retrieval["src/retrieval: search.py / tools.py"]
+        RAG["src/rag: Basic RAG and Agentic RAG"]
     end
 
-    subgraph Infrastructure["Database and External Model Infrastructure"]
-        Postgres[("PostgreSQL<br/>pgvector Extension")]
-        OpenAI["OpenAI API<br/>gpt-4o-mini"]
+    subgraph Infrastructure ["Database and External Model Infrastructure"]
+        Postgres[("PostgreSQL Database + pgvector Extension")]
+        OpenAI["OpenAI API (gpt-4o-mini)"]
     end
 
     Streamlit -->|1. Query Request| RAG
@@ -95,7 +94,6 @@ flowchart TD
     Retrieval -->|5. Hybrid RRF Query| Postgres
     RAG -->|6. Synthesis / Tool Loop| OpenAI
     RAG -->|7. Render Response| Streamlit
-```
 ---
 
 ## 📈 4. Evaluation & Experiments
