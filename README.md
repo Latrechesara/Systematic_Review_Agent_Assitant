@@ -5,34 +5,6 @@
 </video>
 
 
-```mermaid
-flowchart TD
-    subgraph UI ["User Interface Layer (app/)"]
-        Streamlit["Streamlit Dashboard Application\n(app/ directory)"]
-    end
-
-    subgraph Core ["Core Application Logic (src/)"]
-        Embedder["src/embedder.py\n(all-MiniLM-L6-v2)"]
-        Ingestion["src/ingestion/\nchunk.py / index.py"]
-        Retrieval["src/retrieval/\n• search.py (PGSearcher)\n• tools.py (RETRIEVAL_TOOL)\n(Dense Vector + FTS Search, RRF)"]
-        RAG["src/rag/\n• Basic RAG (Structured Output)\n• Agentic RAG (Tool Calls)"]
-    end
-
-    subgraph Infrastructure ["Database & External Model Infrastructure"]
-        Postgres[("PostgreSQL Database\n+ pgvector Extension\n(document_chunks)")]
-        OpenAI["OpenAI API\n(gpt-4o-mini)"]
-    end
-
-    Streamlit -->|1. Query Request| RAG
-    Ingestion -->|2. Generate Embeddings| Embedder
-    Ingestion -->|2. Store Chunks & Vectors| Postgres
-    RAG -->|3. Search Request| Retrieval
-    Retrieval -->|4. Encode Query| Embedder
-    Retrieval -->|5. Hybrid RRF Query| Postgres
-    RAG -->|6. Synthesis / Tool Loop| OpenAI
-    RAG -->|7. Render Response| Streamlit
-```
-
 
 
 https://github.com/user-attachments/assets/e7f7f566-b4aa-4268-b4e4-85a5f42e8d21
@@ -80,6 +52,33 @@ While metadata (Title, DOI, Year) is fetched via API, the unstructured **Abstrac
 ```
 ---
 
+```mermaid
+flowchart TD
+    subgraph UI ["User Interface Layer (app/)"]
+        Streamlit["Streamlit Dashboard Application\n(app/ directory)"]
+    end
+
+    subgraph Core ["Core Application Logic (src/)"]
+        Embedder["src/embedder.py\n(all-MiniLM-L6-v2)"]
+        Ingestion["src/ingestion/\nchunk.py / index.py"]
+        Retrieval["src/retrieval/\n• search.py (PGSearcher)\n• tools.py (RETRIEVAL_TOOL)\n(Dense Vector + FTS Search, RRF)"]
+        RAG["src/rag/\n• Basic RAG (Structured Output)\n• Agentic RAG (Tool Calls)"]
+    end
+
+    subgraph Infrastructure ["Database & External Model Infrastructure"]
+        Postgres[("PostgreSQL Database\n+ pgvector Extension\n(document_chunks)")]
+        OpenAI["OpenAI API\n(gpt-4o-mini)"]
+    end
+
+    Streamlit -->|1. Query Request| RAG
+    Ingestion -->|2. Generate Embeddings| Embedder
+    Ingestion -->|2. Store Chunks & Vectors| Postgres
+    RAG -->|3. Search Request| Retrieval
+    Retrieval -->|4. Encode Query| Embedder
+    Retrieval -->|5. Hybrid RRF Query| Postgres
+    RAG -->|6. Synthesis / Tool Loop| OpenAI
+    RAG -->|7. Render Response| Streamlit
+```
 ## 🏗️ 3. System Architecture & Flow
 
 flowchart TD
