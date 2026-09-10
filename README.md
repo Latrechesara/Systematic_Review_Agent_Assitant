@@ -91,8 +91,6 @@ flowchart TD
     Retrieval -->|5. Hybrid RRF Query| Postgres
     RAG -->|6. Synthesis / Tool Loop| OpenAI
     RAG -->|7. Render Response| Streamlit
-```
-
 
 1. **Ingestion & Indexing:** Abstracts are chunked and ingested into a dual-index setup combining sparse text indexing (BM25) and dense vector embeddings.
 2. **Hybrid Search:** Queries perform parallel lexical and semantic retrieval.
