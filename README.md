@@ -148,28 +148,26 @@ Evaluates multi-turn Agentic RAG behaviors across three execution axes:
 
 ## 🛠️ 5. Project Structure
 
-\`\`\`text
 systematic_review_assistant/
 ├── app/
 │   ├── main.py                 # Streamlit User Interface
 │   ├── rag.py                  # Core RAG execution & pipeline logic
 │   └── feedback.py             # Feedback collection & storage handler
 ├── data/
+│   ├── scrape.py               # PubMed & DBLP dataset harvester script
 │   ├── lung_cancer_multimodal_papers.csv  # Raw dataset
-│   ├── ground_truth.csv                  # Benchmark evaluation dataset
+│   ├── ground_truth.csv        # Benchmark evaluation dataset
 │   ├── ground_truth_with_answers.csv     # RAG pipeline generations
-│   ├── evaluation_results.csv            # Retrieval benchmark metrics
-│   └── eval_judge_results.csv            # LLM Judge score distributions
+│   ├── evaluation_results.csv  # Retrieval benchmark metrics
+│   └── eval_judge_results.csv  # LLM Judge score distributions
 ├── evaluation/
 │   ├── generate_ground_truth.py # Synthesizes benchmark QA pairs
 │   ├── evaluate_rag.py          # Executes RAG over benchmark set
 │   └── judge.py                 # Parallel structured LLM Judge evaluator
-├── Dockerfile                   # Main application container definition
-├── docker-compose.yml           # Orchestrator setup
-├── pyproject.toml               # Project dependencies (managed via uv)
-└── README.md                    # Project documentation
-\`\`\`
-
+├── Dockerfile                  # Main application container definition
+├── docker-compose.yml          # Orchestrator setup
+├── pyproject.toml              # Project dependencies (managed via uv)
+└── README.md                   # Project documentation
 ---
 
 ## 🚀 6. How to Run the Project
@@ -182,7 +180,7 @@ systematic_review_assistant/
 
 1. **Clone the repository:**
    \`\`\`bash
-   git clone https://github.com/YOUR_USERNAME/systematic-review-assistant.git
+   git clone https://github.com/Latrechesara/Systematic_Review_Agent_Assitant
    cd systematic-review-assistant
    \`\`\`
 
@@ -257,7 +255,5 @@ The judge results and verdict score distributions will be saved directly to \`da
 * **Evaluation Framework:** Pydantic, Tenacity, ThreadPoolExecutor
 '''
 
-with open('README.md', 'w', encoding='utf-8') as f:
-    f.write(content)
-print('Successfully created README.md!')
+ADME.md!')
 "
