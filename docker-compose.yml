@@ -1,0 +1,57 @@
+version: "3.8"
+
+services:
+  postgres:
+    # Usepgvector image (PostgreSQL 16 + pgvector) instead of standard alpine
+    image: pgvector/pgvector:pg16
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: interactions
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d interactions"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: streamlit_app
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/interactions
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  grafana:
+    # Pin Grafana version for reproducibility
+    image: grafana/grafana:10.4.0
+    container_name: grafana
+    ports:
+      - "127.0.0.1:3000:3000"
+    environment:
+      GF_AUTH_ANONYMOUS_ENABLED: "true"
+      GF_AUTH_ANONYMOUS_ORG_ROLE: "Viewer"
+      GF_SECURITY_ADMIN_PASSWORD: "admin"
+    volumes:
+      # Persistent named volume for saved dashboards and database state
+      - grafana_data:/var/lib/grafana
+      # Map monitoring directory for provisioning configurations
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  grafana_data:
