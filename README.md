@@ -17,20 +17,6 @@ https://github.com/user-attachments/assets/e7f7f566-b4aa-4268-b4e4-85a5f42e8d21
 
 
 
-## 📌 Peer Review Evaluation Quick Reference
-
-| Evaluation Criterion | Implementation Details in Repo | Max Score |
-| :--- | :--- | :---: |
-| **Problem Description** | Clear clinical motivation focusing on systematic reviews and PICO extraction. | **2/2** |
-| **Retrieval Flow** | Hybrid Search (BM25 + Dense Vectors) with Reranking and Context Assembly. | **2/2** |
-| **Retrieval Evaluation** | Comparative evaluation of vector, sparse, and hybrid search using MRR and Hit Rate. | **2/2** |
-| **LLM Evaluation** | Custom LLM Judge (\`gpt-4o-mini\`) using Pydantic structured outputs (\`BasicRAGAnswerEvaluation\`). | **2/2** |
-| **Interface** | Interactive Streamlit Web Application (\`app/main.py\`). | **2/2** |
-| **Ingestion Pipeline** | Automated ground truth synthesis and dataset indexing scripts (\`generate_ground_truth.py\`). | **2/2** |
-| **Monitoring** | Integrated user feedback collection system logging ratings and comments. | **2/2** |
-| **Containerization** | Orchestrated multi-container build using \`Dockerfile\` and \`docker-compose.yml\`. | **2/2** |
-| **Reproducibility** | Deterministic dependency locks via \`uv\` (\`pyproject.toml\` / \`uv.lock\`) with clear execution steps. | **2/2** |
-| **Best Practices** | Hybrid Search (+1), Document Re-ranking (+1), and Structured Pydantic Schemas (+1). | **+3** |
 
 ---
 
