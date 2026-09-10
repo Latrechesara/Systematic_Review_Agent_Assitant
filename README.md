@@ -51,18 +51,78 @@ The project uses a specialized domain dataset: **\`lung_cancer_multimodal_papers
 
 ## 🏗️ 3. System Architecture & Flow
 
-\`\`\`text
-┌─────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
-│  User Question  │ ──> │ Hybrid Retrieval     │ ──> │ Reranking (Cohere/  │
-│  (Streamlit UI) │     │ (BM25 + Vector)      │     │ Cross-Encoder)      │
-└─────────────────┘     └──────────────────────┘     └─────────────────────┘
-                                                                │
-                                                                ▼
-┌─────────────────┐     ┌──────────────────────┐     ┌─────────────────────┐
-│ Feedback Store  │ <── │ Streamlit Web App /  │ <── │ LLM Answer          │
-│ (SQLite / CSV)  │     │ Visualizer           │     │ Generation          │
-└─────────────────┘     └──────────────────────┘     └─────────────────────┘
-\`\`\`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 480" width="100%" height="100%">
+  <defs>
+    <style>
+      .title { font-family: system-ui, -apple-system, sans-serif; font-weight: bold; font-size: 14px; fill: #1e293b; }
+      .label { font-family: system-ui, -apple-system, sans-serif; font-size: 12px; fill: #ffffff; font-weight: 600; text-anchor: middle; }
+      .sublabel { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #e2e8f0; text-anchor: middle; }
+      .edge-text { font-family: system-ui, -apple-system, sans-serif; font-size: 10px; fill: #64748b; font-weight: 500; text-anchor: middle; }
+      .box-ui { fill: #2563eb; stroke: #1d4ed8; stroke-width: 2; rx: 8; }
+      .box-process { fill: #d97706; stroke: #b45309; stroke-width: 2; rx: 8; }
+      .box-storage { fill: #16a34a; stroke: #15803d; stroke-width: 2; rx: 8; }
+      .box-model { fill: #9333ea; stroke: #7e22ce; stroke-width: 2; rx: 8; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .subgraph { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1.5; stroke-dasharray: 4 4; rx: 12; }
+    </style>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#64748b" />
+    </marker>
+  </defs>
+
+  <!-- User Interface Layer -->
+  <rect x="20" y="20" width="860" height="90" class="subgraph" />
+  <text x="35" y="42" class="title">User Interface Layer</text>
+  <rect x="60" y="52" width="160" height="45" class="box-ui" />
+  <text x="140" y="75" class="label">User Query</text>
+  <rect x="280" y="52" width="180" height="45" class="box-ui" />
+  <text x="370" y="75" class="label">Streamlit Web App</text>
+
+  <!-- Storage & Indexing Layer -->
+  <rect x="20" y="135" width="860" height="110" class="subgraph" />
+  <text x="35" y="157" class="title">Storage &amp; Indexing Layer</text>
+  <rect x="180" y="170" width="220" height="55" class="box-storage" />
+  <text x="290" y="195" class="label">Dual-Index Store</text>
+  <text x="290" y="212" class="sublabel">(pgvector / BM25 + Dense)</text>
+  <rect x="520" y="170" width="220" height="55" class="box-storage" />
+  <text x="630" y="195" class="label">Feedback &amp; Metrics Store</text>
+  <text x="630" y="212" class="sublabel">(PostgreSQL / Grafana)</text>
+
+  <!-- RAG Processing Pipeline -->
+  <rect x="20" y="265" width="860" height="190" class="subgraph" />
+  <text x="35" y="287" class="title">RAG Processing Pipeline</text>
+  <rect x="60" y="320" width="200" height="55" class="box-process" />
+  <text x="160" y="345" class="label">Hybrid Retrieval</text>
+  <text x="160" y="362" class="sublabel">(BM25 + Dense Vectors)</text>
+  <rect x="340" y="320" width="200" height="55" class="box-process" />
+  <text x="440" y="345" class="label">Reranking Model</text>
+  <text x="440" y="362" class="sublabel">(Cohere / Cross-Encoder)</text>
+  <rect x="620" y="320" width="200" height="55" class="box-model" />
+  <text x="720" y="345" class="label">Answer Generation</text>
+  <text x="720" y="362" class="sublabel">(gpt-4o-mini)</text>
+
+  <!-- Connectors -->
+  <path d="M 220 75 L 280 75" class="arrow" />
+  <path d="M 370 97 L 370 290 L 160 290 L 160 320" class="arrow" />
+  <text x="240" y="283" class="edge-text">1. Submit Query</text>
+
+  <path d="M 160 320 L 160 225" class="arrow" />
+  <path d="M 290 225 L 290 320" class="arrow" />
+  <text x="225" y="250" class="edge-text">2. Fetch Chunks</text>
+
+  <path d="M 260 347 L 340 347" class="arrow" />
+  <text x="300" y="340" class="edge-text">3. Candidates</text>
+
+  <path d="M 540 347 L 620 347" class="arrow" />
+  <text x="580" y="340" class="edge-text">4. Context</text>
+
+  <path d="M 720 320 L 720 75 L 460 75" class="arrow" />
+  <text x="610" y="68" class="edge-text">5. Grounded Answer + Citations</text>
+
+  <path d="M 460 85 L 630 85 L 630 170" class="arrow" />
+  <text x="555" y="100" class="edge-text">6. Save Telemetry</text>
+</svg>
+
 
 1. **Ingestion & Indexing:** Abstracts are chunked and ingested into a dual-index setup combining sparse text indexing (BM25) and dense vector embeddings.
 2. **Hybrid Search:** Queries perform parallel lexical and semantic retrieval.
