@@ -40,13 +40,28 @@ Manual extraction is time-consuming and prone to human error. **Systematic Revie
 
 ## 📊 2. Dataset
 
-The project uses a specialized domain dataset: **\`lung_cancer_multimodal_papers.csv\`**.
-* **Source:** Peer-reviewed research papers on multimodal AI applications in lung cancer diagnosis and prognosis.
-* **Fields:** \`doc_id\`, \`title\`, \`abstract\`, \`modalities_found_auto\`, \`publication_year\`, \`doi\`.
-* **Ground Truth:** Synthesized using \`gpt-4o-mini\` structured outputs, generating 5 distinct research QA pairs per paper following strict medical systematic review standards (\`data/ground_truth.csv\`).
+## 📊 Dataset Pipeline (`scrape.py`)
 
-*(Note: In accordance with course guidelines, the DataTalks.Club Zoomcamp FAQ was **not** used).*
+### How to Generate the Data
+Run the harvester script located in the `data/` directory to fetch, filter, and score the latest peer-reviewed literature:
 
+```bash
+python data/scrape.py
+```
+
+* **Data Sources:** Queries **PubMed** (NCBI E-utilities API) and **DBLP** REST API for papers published between **2020–2026**.
+* **Filtering & Deduplication:** Filters for papers requiring $\ge 2$ distinct modalities (e.g., CT, PET, Pathology, Omics) and deduplicates entries by DOI and title.
+* **Output:** Generates `data/lung_cancer_multimodal_papers.csv` containing paper metadata, DOIs, publication years, and auto-detected modalities.
+
+---
+
+### 🧠 Why the Abstract Requires an LLM
+
+While metadata (Title, DOI, Year) is fetched via API, the unstructured **Abstract** text requires an LLM (`gpt-4o-mini`):
+
+* **Ground Truth Generation:** Scans complex, unstructured clinical abstracts to synthesize **5 high-quality QA pairs per paper** (`data/ground_truth.csv`).
+* **Contextual Insight:** Extracts precise medical information (such as fusion techniques and clinical outcomes) that keyword matching cannot parse.
+```
 ---
 
 ## 🏗️ 3. System Architecture & Flow
