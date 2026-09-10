@@ -16,6 +16,7 @@ https://github.com/user-attachments/assets/e7f7f566-b4aa-4268-b4e4-85a5f42e8d21
 ---
 
 
+```markdown
 ```mermaid
 flowchart TD
     subgraph UI ["User Interface Layer (app)"]
