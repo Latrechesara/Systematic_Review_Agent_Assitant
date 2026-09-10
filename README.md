@@ -1,8 +1,7 @@
 
 # Systematic Review Assistant: Multimodal AI for Lung Cancer
 
-[![Watch Full Video](assets/demo.gif)](https://youtu.be/U9issZ-yRI8)
-
+[![YouTube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=U9issZ-yRI8)
 
 > An end-to-end Retrieval-Augmented Generation (RAG) system and interactive dashboard designed to automate literature search, evidence extraction, and synthesis for systematic reviews on **Multimodal AI in Lung Cancer**.
 
