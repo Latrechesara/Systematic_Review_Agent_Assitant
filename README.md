@@ -93,6 +93,7 @@ flowchart TD
     RAG -->|7. Render Response| Streamlit
 ```
 
+
 1. **Ingestion & Indexing:** Abstracts are chunked and ingested into a dual-index setup combining sparse text indexing (BM25) and dense vector embeddings.
 2. **Hybrid Search:** Queries perform parallel lexical and semantic retrieval.
 3. **Re-Ranking:** Top results are re-ordered using a cross-encoder / reranker model to maximize contextual precision.
