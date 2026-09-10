@@ -1,0 +1,7 @@
+Experiment,MRR,Hit Rate
+Full Doc - Keyword,0.4143,0.5736
+Full Doc - Vector,0.3843,0.5024
+Full Doc - Hybrid (RRF k=50),0.4608,0.6068
+Chunked - Keyword,0.3925,0.4814
+Chunked - Vector,0.4287,0.5291
+Chunked - Hybrid (RRF k=50),0.4847,0.6019
