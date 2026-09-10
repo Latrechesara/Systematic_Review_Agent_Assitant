@@ -1,5 +1,7 @@
-python -c "
-content = '''# 🫁 Systematic Review Assistant: Multimodal AI for Lung Cancer
+# Systematic Review Assistant: Multimodal AI for Lung Cancer
+
+
+
 
 > An end-to-end Retrieval-Augmented Generation (RAG) system and interactive dashboard designed to automate literature search, evidence extraction, and synthesis for systematic reviews on **Multimodal AI in Lung Cancer**.
 
