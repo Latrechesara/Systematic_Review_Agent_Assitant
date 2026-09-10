@@ -4,6 +4,11 @@
   Your browser does not support the video tag.
 </video>
 
+
+
+https://github.com/user-attachments/assets/e7f7f566-b4aa-4268-b4e4-85a5f42e8d21
+
+
 > An end-to-end Retrieval-Augmented Generation (RAG) system and interactive dashboard designed to automate literature search, evidence extraction, and synthesis for systematic reviews on **Multimodal AI in Lung Cancer**.
 
 ---
